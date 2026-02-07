@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Effet Parallax</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Section avec effet parallax */
+        .parallax-section {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .parallax-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 120%;
+            background-size: cover;
+            background-position: center;
+            will-change: transform;
+            z-index: -1;
+        }
+
+        .parallax-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .parallax-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .parallax-content p {
+            font-size: 1.2rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Section normale */
+        .content-section {
+            padding: 4rem 2rem;
+            background: #f5f5f5;
+            min-height: 50vh;
+        }
+
+        .content-section h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+
+        .content-section p {
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+            color: #666;
+        }
+
+        /* Styles responsive */
+        @media (max-width: 768px) {
+            .parallax-content h1 {
+                font-size: 2rem;
+            }
+            
+            .parallax-content p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Section 1 avec parallax -->
+    <section class="parallax-section">
+        <div class="parallax-bg" style="background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920');" data-speed="0.5"></div>
+        <div class="parallax-content">
+            <h1>Bienvenue</h1>
+            <p>Découvrez l'effet parallax en action</p>
+        </div>
+    </section>
+
+    <!-- Contenu normal -->
+    <section class="content-section">
+        <h2>À propos</h2>
+        <p>
+            L'effet parallax crée une illusion de profondeur en faisant défiler l'arrière-plan 
+            plus lentement que le contenu au premier plan. Cela donne une sensation de mouvement 
+            et d'immersion à votre site web.
+        </p>
+    </section>
+
+    <!-- Section 2 avec parallax -->
+    <section class="parallax-section">
+        <div class="parallax-bg" style="background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920');" data-speed="0.3"></div>
+        <div class="parallax-content">
+            <h1>Explorez</h1>
+            <p>Scrollez pour voir l'effet</p>
+        </div>
+    </section>
+
+    <!-- Contenu normal -->
+    <section class="content-section">
+        <h2>Comment ça marche</h2>
+        <p>
+            En utilisant JavaScript, nous détectons le défilement de la page et appliquons 
+            une transformation CSS pour déplacer l'image d'arrière-plan à une vitesse différente. 
+            Plus la vitesse est faible, plus l'effet de profondeur est prononcé.
+        </p>
+    </section>
+
+    <!-- Section 3 avec parallax -->
+    <section class="parallax-section">
+        <div class="parallax-bg" style="background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920');" data-speed="0.4"></div>
+        <div class="parallax-content">
+            <h1>Impressionnant</h1>
+            <p>Simple et efficace</p>
+        </div>
+    </section>
+
+    <script>
+        // Effet parallax au scroll
+        function parallaxEffect() {
+            const parallaxElements = document.querySelectorAll('.parallax-bg');
+            
+            parallaxElements.forEach(element => {
+                const speed = element.dataset.speed || 0.5;
+                const rect = element.parentElement.getBoundingClientRect();
+                const scrolled = window.pageYOffset;
+                const elementTop = rect.top + scrolled;
+                const elementHeight = rect.height;
+                
+                // Calculer la position seulement si l'élément est visible
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    const yPos = (scrolled - elementTop) * speed;
+                    element.style.transform = `translate3d(0, ${yPos}px, 0)`;
+                }
+            });
+        }
+
+        // Écouter le scroll avec throttling pour de meilleures performances
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    parallaxEffect();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // Appeler une fois au chargement
+        parallaxEffect();
+    </script>
+</body>
+</html>
